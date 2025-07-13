@@ -8,14 +8,15 @@ import messageRouter from "./routes/messageRoutes.js";
 import { Server } from "socket.io";
 import { Socket } from "dgram";
 import { log } from "console";
-import { disconnect } from "process";
+// import { disconnect } from "process";
 
 const app=express();
 const server=http.createServer(app);
 
 //inaitialize socket.io server
 export const io= new Server( server,{
-    cors: {origin:"*"}
+    cors: {origin:"*"},
+    credentials: true
 })
 
 // store online users
@@ -40,7 +41,10 @@ io.on("connection", (socket)=>{
 
 // Middleware
 app.use(express.json({limit: "4mb"}));
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    credentials: true,
+  }));
 
 // routes setup
 app.use('/api/status',(req,res)=> res.send("server is live"));
